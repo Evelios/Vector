@@ -1,0 +1,30 @@
+{
+  "name": "vector",
+  "version": "1.0.0",
+  "description": "A vector library using list based structures",
+  "main": "Vector.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Evelios/Vector.git"
+  },
+  "keywords": [
+    "vector",
+    "vec",
+    "2d",
+    "list",
+    "geometry"
+  ],
+  "author": "Thomas Waters",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Evelios/Vector/issues"
+  },
+  "homepage": "https://github.com/Evelios/Vector#readme",
+  "devDependencies": {
+    "almost-equal": "^1.1.0",
+    "tape": "^4.9.1"
+  }
+}
