@@ -1,35 +1,52 @@
-import { fequals } from "../utilities/Util";
-
 class Vector {
     /**
      * @class Vector
      *
-     * This is a basic vector class that is used for geometry, position inforamtion,
-     * movement infomation, and more complex structures.
-     * The vector class follows a immutable paradigm where changes are not made to the
-     * vectors themselves. Any change to a vector is returned as a new vector that
-     * must be captured.
-     *
-     * @description This vector class was constructed so that it can mirror two types of common
-     * point/vector type objects. This is having object properties stored as object
-     * properties (eg. vector.x, vector.y) or as list properties, [x, y] which can
-     * be accessed by vector[0], or vector[1].
-     *
+     * This is a basic Vector class. This vector class is based off a list data
+     * type. So all vectors are stored as a list of [x, y]. These vectors can
+     * me rotated, translated, stretched, pulled, and generally geometrically
+     * played with.
+     * 
+     * @property {number} Precision The precision of the floating point numbers
+     * 
      * @summary Create a 2D Vector object
-     *
-     * @property {number} x The x vector component
-     * @property {number} y The y vector component
-     * @property {number} 0 The x vector component
-     * @property {number} 1 The y vector component
-     *
-     * @param {number|Vector} x The x component or another vector
-     * @param {number} [y] The y component
      */
-    constructor(x, y) {
-        if (x instanceof Vector || (x.x && x.y && !y)) {
-            this._set(x.x, x.y);
-        } else {
-            this._set(x, y);
+
+    //---- Default Constructor ----
+
+    /**
+     * Create a vector object from a List or Object type vector notation.
+     * 
+     * @example
+     * // Array
+     * var vec = Vector([x, y])
+     * 
+     * // Object
+     * var vec = Vector({x, y})
+     * 
+     * @static
+     * @param {object|Array} vec The input vector 
+     * 
+     * @returns {Array} The vector array in the form [x, y]
+     * @throws {TypeError} If the array is NaN or infinity
+     * @memberof Vector
+     */
+    static Vector(vec) {
+        if (vec instanceof Array) {
+            if (vec.length == 2) {
+                return [Vector._clean(vec[0]), Vector._clean(vec[1])];
+           }
+           else {
+               throw new TypeError('Vector is of length ' + vec.length + ' instead of length 2');
+           }
+        }
+        else {
+            if (vec.hasOwnProperty('x') && vec.hasOwnProperty('y')) {
+                return [Vector._clean(vec.x), Vector._clean(vec.y)];
+            }
+            else {
+                throw new TypeError("Vector object is not array of [x, y] and is not an object of form {x, y}");
+            }
         }
     }
 
@@ -39,110 +56,103 @@ class Vector {
      * Create a vector from polar coordinates
      *
      * @static
-     * @param {number} r The radius of the vector
+     * @param {number} radius The radius of the vector
      * @param {number} theta The angle of the vector in radians.
      *  Should be between 0 and 2*PI
+     * 
      * @returns The rectangular vector produced from the polar coordinates
      *
      * @memberof Vector
      */
-    static Polar(r, theta) {
-        return new Vector(r * Math.cos(theta), r * Math.sin(theta));
+    static Polar(radius, theta) {
+        return Vector.Vector(radius * Math.cos(theta), radius * Math.sin(theta));
     }
 
     //---- Helper Functions ----
-
+    
     /**
-     * Internal Helper Function for setting variable properties
-     *
+     * Cleans up the number to make sure that the value is not NaN and is finite.
+     * It also checks for floating point precision and rounds based on the
+     * vector floating point precision.
+     * 
+     * @static
      * @private
-     * @param {number} x The x component
-     * @param {number} y The y component
+     * 
+     * @param {number} num The number to be cleaned
+     * @returns {number} The cleaned output number
+     *  
+     * @throws {RangeError} Throws range error if the value is NaN or -Inf or +Inf 
      * @memberof Vector
      */
-    _set(x, y) {
-        this.__proto__[0] = x;
-        this.__proto__[1] = y;
-        this.x = x;
-        this.y = y;
+    static _clean(num) {
+        if (isNaN(num)) {
+            throw new RangeError('Value is NaN');
+        }
+
+        if (!isFinite(num)) {
+            throw new RangeError('Value is Infinite');
+        }
+
+        if (Math.round(num) == num) {
+            return num;
+        }
+
+        return Math.round(num * Vector.Precision) / Vector.Precision;
     }
 
     /**
-     * Get the vector key:Symbol representation [x, y]
-     * Currently has the same behavior as list()
-     * @returns {Symbol} The vector key element
+     * Determine if two numbers are almost equal to eachother. This is based on
+     * the Vector.Precision value
+     * 
+     * @static
+     * @private
+     * @param {number} a The first value 
+     * @param {number} b The second value
+     * @returns {boolean} True if the values are almost equal to eachother
+     * 
      * @memberof Vector
      */
-    key() {
-        return this.list();
-        // return Symbol(this.list()); // Not currently working as a key symbol
+    static _almostEqual(a, b) {
+        return Vector._clean(a) === Vector._clean(b);
     }
 
     /**
-     * Get the vector in list form as [x, y]
-     *
-     * @returns {number[]} List representation of the vector of length 2
+     * Determine if two vectors are equal to eachother
+     * 
+     * @static
+     * @param {Vector} a The first vector 
+     * @param {Vector} b The second vector
+     * @returns {boolean} True if the two vectors are equal to eachother
+     * 
      * @memberof Vector
      */
-    list() {
-        return [this.x, this.y];
+    static equals(a, b) {
+        return Vector._almostEqual(a[0], b[0]) &&
+               Vector._almostEqual(a[0], b[1]);
     }
 
     /**
      * Returns the vector as a string of (x, y)
      *
+     * @param {number[]} vec The input vector
+     * 
      * @returns {string} The string representation of a vector in (x, y) form
      * @memberof Vector
      */
-    toString() {
-        return `(${this.x}, ${this.y})`;
-    }
-
-    /**
-     * Get a copy of the input vector
-     *
-     * @param {Vector} v the vector to be coppied
-     * @returns {Vector} The vector copy
-     * @memberof Vector
-     */
-    copy() {
-        return Vector.copy(this);
+    static toString(vec) {
+        return `(${vec[0]}, ${vec[1]})`;
     }
 
     /**
      * Get a copy of the input vector
      *
      * @static
-     * @param {Vector} v the vector to be coppied
+     * @param {Vector} vec the vector to be coppied
      * @returns {Vector} The vector copy
      * @memberof Vector
      */
-    static copy(v) {
-        return new Vector(v.x, v.y);
-    }
-
-    /**
-     * Returns true if the two vector positions are equal
-     *
-     * @static
-     * @param {Vector} v1 The first vector
-     * @param {Vector} v2 The second vector
-     * @returns {boolean} True if the vector positions are equal
-     * @memberof Vector
-     */
-    static equals(v1, v2) {
-        return fequals(v1.x, v2.x) && fequals(v1.y, v2.y);
-    }
-
-    /**
-     * Returns true if this vectors position is equal to the other vector
-     *
-     * @param {Vector} other The other vector to compare to
-     * @returns {boolean} True if the vector positions are equal
-     * @memberof Vector
-     */
-    equals(other) {
-        return Vector.equals(this, other);
+    static copy(vec) {
+        return Vector.Vector(vec);
     }
 
     //---- Basic Math Functions ----
@@ -157,18 +167,7 @@ class Vector {
      * @memberof Vector
      */
     static add(a, b) {
-        return new Vector(a.x + b.x, a.y + b.y);
-    }
-
-    /**
-     * Add this vector with another vector element wise
-     *
-     * @param {Vector} other The other vector
-     * @returns {Vector} The vector result of adding the two vectors
-     * @memberof Vector
-     */
-    add(other) {
-        return Vector.add(this, other);
+        return Vector.Vector(a[0] + b[0], a[1] + b[1]);
     }
 
     /**
@@ -181,41 +180,32 @@ class Vector {
      * @memberof Vector
      */
     static subtract(a, b) {
-        return new Vector(a.x - b.x, a.y - b.y);
-    }
-
-    /**
-     * Subtract this vector with another vector element wise
-     *
-     * @param {Vector} other The other vector
-     * @returns {Vector} The vector result of subtracting the two vectors
-     * @memberof Vector
-     */
-    subtract(other) {
-        return Vector.subtract(this, other);
+        return Vector.Vector(a[0] - b[0], a[0] - b[0]);
     }
 
     /**
      * Multiply the vector by a scalar value
      *
+     * @param {number[]} vec The input vector
      * @param {number} scalar The number to multiply the vector by
      * @returns {Vector} The result of multiplying the vector by a scalar
      *  element wise
      * @memberof Vector
      */
-    multiply(scalar) {
-        return new Vector(this.x * scalar, this.y * scalar);
+    static multiply(vec, scalar) {
+        return Vector.Vector(vec[0] * scalar, vec[1] * scalar);
     }
 
     /**
      * Divide the vector by a scalar value
      *
-     * @param {number} scalar
+     * @param {Vector} vec The input vector
+     * @param {number} scalar THe number to multiply the vector by
      * @returns {Vector} The result of multiplying the vector by a scalar
      * @memberof Vector
      */
-    divide(scalar) {
-        return new Vector(this.x / scalar, this.y / scalar);
+    static divide(vec, scalar) {
+        return Vector.Vector(vec[0] / scalar, vec[1] / scalar);
     }
 
     //---- Advanced Vector Functions ----
@@ -223,36 +213,56 @@ class Vector {
     /**
      * Get the magnitude of the vector
      *
+     * @param {Vector} vec The vector to determine the magnitude from
      * @returns {number} The magniture of the vector
      * @memberof Vector
      */
-    magnitude() {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
+    static magnitude(vec) {
+        return Math.sqrt(Vector.magSquared(vec));
+    }
+
+    /**
+     * Get the magnitude of the vector squared. Use this value if you only need
+     * a number to compare the vectors to and don't need the actual value. This
+     * will save from using the expensive computation of the square route
+     * function.
+     * 
+     * @static
+     * @param {Vector} vec The vector to determine the squared magnitude from
+     * @returns {number} The magnitude of the vector squared 
+     * 
+     * @memberof Vector
+     */
+    static magSquared(vec) {
+        return Math.pow(vec[0], 2) + Math.pow(vec[1], 2);
     }
 
     // Get the unit vector
     /**
      * Get the normal vector of the current vector.
      *
+     * @param {Vector} vec The vector to normalize
      * @returns {Vector} A vector that is the normal compenent of the vector
      * @memberof Vector
      */
-    normalize() {
-        return this.divide(this.magnitude());
+    static normalize(vec) {
+        return Vector.divide(vec, Vector.magnitude(vec));
     }
 
     /**
-     * Get the get the current vector rotated by a certain ammount
+     * Get the get the current vector rotated by a certain ammount around
+     * a particular point
      *
-     * @param {number} radians
+     * @param {Vector} vec The vector to rotate
+     * @param {Vector} around The vector to rotate around
+     * @param {number} radians The ammount to rotate
+     * 
      * @returns {Vector} The vector that results from rotating the current
      *  vector by a particular ammount
      * @memberof Vector
      */
-    rotate(radians) {
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
-        return new Vector(c * this.x - s * this.y, s * this.x + c * this.y);
+    rotate(vec, around, radians) {
+        return 0;
     }
 
     /**
@@ -265,7 +275,7 @@ class Vector {
      * @memberof Vector
      */
     static dot(a, b) {
-        return a.x * b.x + a.y * b.y;
+        return a[0] * b[0] + a[1] * b[1];
     }
 
     /**
@@ -280,18 +290,7 @@ class Vector {
         for (const vector of vectors) {
             average = Vector.add(average, vector);
         }
-        return average.divide(vectors.length);
-    }
-
-    /**
-     * Get the dot product of this vector and another vector
-     *
-     * @param {Vector} other The other vector
-     * @returns {number} The dot product of this and the other vector
-     * @memberof Vector
-     */
-    dot(other) {
-        return Vector.dot(this, other);
+        return Vector.divide(average, vectors.length);
     }
 
     /**
@@ -304,21 +303,8 @@ class Vector {
      * @memberof Vector
      */
     static cross(a, b) {
-        return a.x * b.y - a.y * b.x;
+        return a[0] * b[1] - a[1] * b[0];
     }
-
-    /**
-     * Get the cross product of this and the other vector
-     *
-     * @param {Vector} other The other vector
-     * @returns {number} The cross product of this and the other vector
-     * @memberof Vector
-     */
-    cross(other) {
-        return Vector.cross(this, other);
-    }
-
-    //---- Purely Static Vector Functions ----
 
     /**
      * Get the midpoint between two vectors
@@ -330,7 +316,7 @@ class Vector {
      * @memberof Vector
      */
     static midpoint(a, b) {
-        return new Vector((a.x + b.x) / 2, (a.y + b.y) / 2);
+        return Vector.divide(Vector.add(a, b), 2);
     }
 
     /**
@@ -345,7 +331,7 @@ class Vector {
      * @todo Add assertion for non-zero length b vector
      */
     static proj(a, b) {
-        return b.multiply(Vector.dot(a, b) / Math.pow(b.magnitude(), 2));
+        return Vector.multiply(b, Vector.dot(a, b) / Math.pow(Vector.magnitude(b), 2));
     }
 
     /**
@@ -358,7 +344,7 @@ class Vector {
      * @memberof Vector
      */
     static angle(a, b) {
-        return Math.acos(Vector.dot(a, b) / (a.magnitude() * b.magnitude()));
+        return Math.acos(Vector.dot(a, b) / (Vector.magnitude(a) * Vector.magnitude(b)));
     }
 
     /**
@@ -368,11 +354,11 @@ class Vector {
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns The euclidean distance between a and b
-     * @see {@link dist2}
+     * @see {@link distSquared}
      * @memberof Vector
      */
     static distance(a, b) {
-        return Math.sqrt(Vector.dist2(a, b));
+        return Math.sqrt(Vector.distSquared(a, b));
     }
 
     /**
@@ -387,9 +373,9 @@ class Vector {
      * @see {@link distnace}
      * @memberof Vector
      */
-    static dist2(a, b) {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
+    static distSquared(a, b) {
+        const dx = a[0] - b[0];
+        const dy = a[1] - b[1];
         return dx * dx + dy * dy;
     }
 
@@ -407,7 +393,7 @@ class Vector {
      * @memberof Vector
      */
     static distToSeg(p, v, w) {
-        return Math.sqrt(Vector.distToSeg2(p, v, w));
+        return Math.sqrt(Vector.distToSegSquared(p, v, w));
     }
 
     /**
@@ -424,30 +410,31 @@ class Vector {
      * @memberof Vector
      */
     static distToSegSquared(p, v, w) {
-        const l = Vector.dist2(v, w);
+        const l = Vector.distSquared(v, w);
         if (l === 0) {
-            return Vector.dist2(p, v);
+            return Vector.distSquared(p, v);
         }
-        let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l;
+        let t = ((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / l;
         t = Math.max(0, Math.min(1, t));
-        return Vector.dist2(
+        return Vector.distSquared(
             p,
-            new Vector(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y))
+            Vector.Vector(v[0] + t * (w[0] - v[0]), v[1] + t * (w[1] - v[1]))
         );
     }
 
     /**
      * Get the two normal vectors that are perpendicular to the current vector
      *
+     * @param {Vector} vec The vector to find the perpendiculars from
      * @returns {Vector[]} The two normal vectors that are perpendicular
      *  to the vector. The first vector is the normal vector that is +90 deg or
      *  +PI/2 rad. The second vector is the noraml vector that is -90 deg or
      *  -PI/2 rad.
      * @memberof Vector
      */
-    perpendiculars() {
-        const plus90 = new Vector(-this.y, this.x).normalize();
-        const minus90 = new Vector(this.y, -this.x).normalize();
+    perpendiculars(vec) {
+        const plus90 = Vector.Vector(-vec[1], vec[0]).normalize();
+        const minus90 = Vector.Vector(vec[1], -vec[0]).normalize();
         return [plus90, minus90];
     }
 
@@ -463,7 +450,7 @@ class Vector {
      */
     static zero() {
         "use strict";
-        return new Vector(0, 0);
+        return [0, 0];
     }
 
     /**
@@ -476,7 +463,7 @@ class Vector {
      */
     static up() {
         "use strict";
-        return new Vector(0, 1);
+        return [0, 1];
     }
 
     /**
@@ -489,7 +476,7 @@ class Vector {
      */
     static down() {
         "use strict";
-        return new Vector(0, -1);
+        return [0, -1];
     }
 
     /**
@@ -502,7 +489,7 @@ class Vector {
      */
     static left() {
         "use strict";
-        return new Vector(-1, 0);
+        return [-1, 0];
     }
 
     /**
@@ -515,8 +502,11 @@ class Vector {
      */
     static right() {
         "use strict";
-        return new Vector(1, 0);
+        return [1, 0];
     }
 }
+
+Vector._p = 8;
+Vector.Precision = Math.pow(10, Vector._p);
 
 export default Vector;
