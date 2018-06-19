@@ -158,10 +158,13 @@ test("Vector normal", function(t) {
 });
 
 test("Vector rotation", function(t) {
-    const v = [3, 4];
-    const eq = [-3, -4];
+    const v1 = [3, 4];
+    const v2 = [1, 1];
+    const amm = Math.PI / 2;
 
-    // t.deepEqual(v.rotate(Math.PI), eq);
+    const eq = [];
+
+    t.fail();
     t.end();
 });
 
@@ -224,5 +227,13 @@ test("Vector Averaging", function(t) {
     const eq = [6, 4];
 
     t.deepEqual(Vector.avg(points), eq);
+    t.end();
+});
+
+test("Vector distance", function(t) {
+    const v1 = [2, 4];
+    const v2 = [4, 6];
+
+    t.equals(Vector.distance(v1, v2), 2 * Math.SQRT2);
     t.end();
 });
