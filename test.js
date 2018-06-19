@@ -2,9 +2,7 @@
 
 const test = require("tape");
 const almostEqual = require("almost-equal");
-const Atum = require("Vector");
-
-const Vector = Atum.Geometry.Vector;
+const Vector = require("./Vector");
 
 // ---- Helper Function ----
 
@@ -25,130 +23,192 @@ function almost(t, actual, expected, msg) {
     }
 }
 
+test("Vector constructor list", function(t) {
+    const v = Vector.Vector([1, 2]);
+
+    t.deepEqual(v, [1, 2]);
+    t.end();
+});
+
+test("Vector constructor object", function(t) {
+    const v = Vector.Vector({x:1, y:2});
+
+    t.deepEqual(v, [1, 2]);
+    t.end();
+});
+
+test("Vector constructor seperate", function(t) {
+    const v = Vector.Vector(1, 2);
+
+    t.deepEqual(v, [1, 2]);
+    t.end();
+});
+
+test("Vector equality", function(t) {
+    t.ok(Vector.equals([1, 2], [1, 2]));
+    t.end();
+});
+
+test("Vector equality floating point", function(t) {
+    t.ok(Vector.equals(
+        Vector.Vector([1.0000000001, 2.2222222222]),
+                      [1.0000000001, 2.2222222222]
+    ));
+    t.end();
+});
+
+test("Vector constructor throw error", function(t) {
+    try {
+       const v1 = Vector([1, NaN]);
+       t.fail("Did not throw error on NaN");
+    }
+    catch (e) {
+        t.pass("Threw error on NaN");
+    }
+
+    try {
+        const v2 = Vector([Infinity, 1]);
+        t.fail("Did not throw error on Infinity");
+    }
+    catch (e) {
+        t.pass("Threw error on Infinity");
+    }
+
+    t.end();
+});
+
+test("Vector to string", function(t) {
+    const v = Vector.Vector(1, 2);
+
+    t.equals(Vector.toString(v), "(1, 2)");
+    t.end();
+});
+
 // ---- Basic Math Functions ----
 
 test("Vector addition two positive", function(t) {
-    const v1 = new Vector(1, 5);
-    const v2 = new Vector(4, 3);
+    const v1 = [1, 5];
+    const v2 = [4, 3];
 
-    const eq = new Vector(5, 8);
+    const eq = [5, 8];
 
     t.deepEqual(Vector.add(v1, v2), eq);
-    t.deepEqual(v1.add(v2), eq);
     t.end();
 });
 
 test("Vector addition two negative", function(t) {
-    const v1 = new Vector(-2, -7);
-    const v2 = new Vector(-4, -3);
+    const v1 = [-2, -7];
+    const v2 = [-4, -3];
 
-    const eq = new Vector(-6, -10);
+    const eq = [-6, -10];
 
     t.deepEqual(Vector.add(v1, v2), eq);
-    t.deepEqual(v1.add(v2), eq);
     t.end();
 });
 
 test("Vector subtraction two positive", function(t) {
-    const v1 = new Vector(1, 5);
-    const v2 = new Vector(4, 3);
+    const v1 = [1, 5];
+    const v2 = [4, 3];
 
-    const eq = new Vector(-3, 2);
+    const eq = [-3, 2];
 
     t.deepEqual(Vector.subtract(v1, v2), eq);
-    t.deepEqual(v1.subtract(v2), eq);
     t.end();
 });
 
 test("Vector subtraction two negative", function(t) {
-    const v1 = new Vector(-2, -7);
-    const v2 = new Vector(-4, -3);
+    const v1 = [-2, -7];
+    const v2 = [-4, -3];
 
-    const eq = new Vector(2, -4);
+    const eq = [2, -4];
 
     t.deepEqual(Vector.subtract(v1, v2), eq);
-    t.deepEqual(v1.subtract(v2), eq);
     t.end();
 });
 
 test("Vector multiplication", function(t) {
-    const v = new Vector(2, 5);
-    const eq = new Vector(6, 15);
+    const v = [2, 5];
+    const eq = [6, 15];
 
-    t.deepEqual(v.multiply(3), eq);
+    t.deepEqual(Vector.multiply(v, 3), eq);
     t.end();
 });
 
 test("Vector Division", function(t) {
-    const v = new Vector(6, 15);
-    const eq = new Vector(2, 5);
+    const v = [6, 15];
+    const eq = [2, 5];
 
-    t.deepEqual(v.divide(3), eq);
+    t.deepEqual(Vector.divide(v, 3), eq);
     t.end();
 });
 
 // ---- Advanced Vector Functions ----
 
 test("Vector magnitude", function(t) {
-    const v = new Vector(3, 4);
-    almost(t, v.magnitude(), 5);
+    const v = [3, 4];
+    almost(t, Vector.magnitude(v), 5);
+    t.end();
+});
+
+test("Vector normal", function(t) {
+    const v = [3, 4];
+
+    t.ok(Vector.equals(Vector.normalize(v), [3/5, 4/5]));
     t.end();
 });
 
 test("Vector rotation", function(t) {
-    const v = new Vector(3, 4);
-    const eq = new Vector(-3, -4);
+    const v = [3, 4];
+    const eq = [-3, -4];
 
     // t.deepEqual(v.rotate(Math.PI), eq);
     t.end();
 });
 
 test("Vector Dot Product", function(t) {
-    const v1 = new Vector(5, 6);
-    const v2 = new Vector(3, 4);
+    const v1 = [5, 6];
+    const v2 = [3, 4];
 
     const eq = 5 * 3 + 6 * 4;
 
     t.equal(Vector.dot(v1, v2), eq);
-    t.equal(v1.dot(v2), eq);
     t.end();
 });
 
 test("Vector Cross Product", function(t) {
-    const v1 = new Vector(5, 6);
-    const v2 = new Vector(3, 4);
+    const v1 = [5, 6];
+    const v2 = [3, 4];
 
     const eq = 4 * 5 - 6 * 3;
 
     t.equal(Vector.cross(v1, v2), eq);
-    t.equal(v1.cross(v2), eq);
     t.end();
 });
 
 //---- Static Vector Functions ----
 
 test("Vector Midpoint", function(t) {
-    const v1 = new Vector(2, 4);
-    const v2 = new Vector(4, 8);
+    const v1 = [2, 4];
+    const v2 = [4, 8];
 
-    const eq = new Vector(3, 6);
+    const eq = [3, 6];
 
     t.deepEqual(Vector.midpoint(v1, v2), eq);
     t.end();
 });
 
 test("Vector Projection", function(t) {
-    const v1 = new Vector(1, 2);
-    const v2 = new Vector(3, 4);
+    const v1 = [1, 2];
+    const v2 = [3, 4];
 
-    const eq = (new Vector(3, 4)).multiply(11 / 25);
+    const eq = Vector.multiply([3, 4], 11 / 25);
     t.deepEqual(Vector.proj(v1, v2), eq);
     t.end();
 });
 
 test("Vector Angle Between Vectors", function(t) {
-    const v1 = new Vector(5, 5);
-    const v2 = new Vector(0, 7);
+    const v1 = [5, 5];
+    const v2 = [0, 7];
 
     const eq = Math.PI / 4;
 
@@ -157,11 +217,11 @@ test("Vector Angle Between Vectors", function(t) {
 });
 
 test("Vector Averaging", function(t) {
-    const v1 = new Vector(8, 7);
-    const v2 = new Vector(7, 4);
-    const v3 = new Vector(3, 1);
+    const v1 = [8, 7];
+    const v2 = [7, 4];
+    const v3 = [3, 1];
     const points = [v1, v2, v3];
-    const eq = new Vector(6, 4);
+    const eq = [6, 4];
 
     t.deepEqual(Vector.avg(points), eq);
     t.end();

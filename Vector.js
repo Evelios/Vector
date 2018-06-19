@@ -18,11 +18,14 @@ class Vector {
      * Create a vector object from a List or Object type vector notation.
      * 
      * @example
+     * // Seperate
+     * var vec = Vector(x, y);
+     * 
      * // Array
-     * var vec = Vector([x, y])
+     * var vec = Vector([x, y]);
      * 
      * // Object
-     * var vec = Vector({x, y})
+     * var vec = Vector({x, y});
      * 
      * @static
      * @param {object|Array} vec The input vector 
@@ -31,22 +34,20 @@ class Vector {
      * @throws {TypeError} If the array is NaN or infinity
      * @memberof Vector
      */
-    static Vector(vec) {
-        if (vec instanceof Array) {
-            if (vec.length == 2) {
-                return [Vector._clean(vec[0]), Vector._clean(vec[1])];
+    static Vector(x, y) {
+        if (Array.isArray(x)) {
+            if (x.length == 2) {
+                return [Vector._clean(x[0]), Vector._clean(x[1])];
            }
            else {
-               throw new TypeError('Vector is of length ' + vec.length + ' instead of length 2');
+               throw new ValueError('Vector is of length ' + x.length + ' instead of length 2');
            }
         }
+        else if (x.hasOwnProperty('x') && x.hasOwnProperty('y')) {
+            return [Vector._clean(x.x), Vector._clean(x.y)];
+        }
         else {
-            if (vec.hasOwnProperty('x') && vec.hasOwnProperty('y')) {
-                return [Vector._clean(vec.x), Vector._clean(vec.y)];
-            }
-            else {
-                throw new TypeError("Vector object is not array of [x, y] and is not an object of form {x, y}");
-            }
+            return [Vector._clean(x), Vector._clean(y)];
         }
     }
 
@@ -113,7 +114,7 @@ class Vector {
      * @memberof Vector
      */
     static _almostEqual(a, b) {
-        return Vector._clean(a) === Vector._clean(b);
+        return Vector._clean(a) - Vector._clean(b) < Vector.Precision;
     }
 
     /**
@@ -180,7 +181,7 @@ class Vector {
      * @memberof Vector
      */
     static subtract(a, b) {
-        return Vector.Vector(a[0] - b[0], a[0] - b[0]);
+        return Vector.Vector(a[0] - b[0], a[1] - b[1]);
     }
 
     /**
@@ -509,4 +510,5 @@ class Vector {
 Vector._p = 8;
 Vector.Precision = Math.pow(10, Vector._p);
 
-export default Vector;
+module.exports = Vector;
+//export default Vector;
