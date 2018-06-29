@@ -200,9 +200,9 @@ class Vector {
                 return 0;
             }
 
-            return vec1[1] > 0 ? Math.PI/2 : 3*Math.PI/2;
+            return vec[1] > 0 ? Math.PI/2 : 3*Math.PI/2;
         }
-        
+
         return Math.atan(vec[1] / vec[0]);
     }
 
