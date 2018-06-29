@@ -189,14 +189,30 @@ test("Vector normal", function(t) {
     t.end();
 });
 
-test("Vector rotation", function(t) {
+test("Vector rotation - Origin", function(t) {
     const v1 = [3, 4];
     const v2 = [1, 1];
     const amm = Math.PI / 2;
 
-    const eq = [];
+    const a1 = [4, -3];
+    const a2 = [1, -1];
 
-    t.fail();
+    t.deepEquals(Vector.rotate(v1, [0, 0], amm), a1);
+    t.deepEquals(Vector.rotate(v2, [0, 0], amm), a2);
+    t.end();
+});
+
+test("Vector rotation - Point", function(t) {
+    const v1 = [3, 4];
+    const v2 = [1, 1];
+    const about = [-1, -1];
+    const amm = Math.PI / 2;
+
+    const a1 = [4, -5];
+    const a2 = [1, -3];
+
+    t.deepEquals(Vector.rotate(v1, about, amm), a1);
+    t.deepEquals(Vector.rotate(v2, about, amm), a2);
     t.end();
 });
 

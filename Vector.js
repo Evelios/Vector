@@ -281,20 +281,30 @@ class Vector {
     }
 
     /**
-     * Get the get the current vector rotated by a certain ammount around
-     * a particular point
+     * Get the get the current vector rotated by a certain ammount clockwise
+     * around a particular point
      *
      * @static
      * @param {Vector} vec The vector to rotate
      * @param {Vector} around The vector to rotate around
-     * @param {number} radians The ammount to rotate
+     * @param {number} angle The ammount to rotate a positive angle rotates
+     *  the vector clockwise
      * 
      * @returns {Vector} The vector that results from rotating the current
      *  vector by a particular ammount
      * @memberof Vector
      */
-    static rotate(vec, around, radians) {
-        return 0;
+    static rotate(vec, around, angle) {
+        const x = vec[0];
+        const y = vec[1];
+        const x_origin = around[0];
+        const y_origin = around[1];
+
+        const x_rotated = ((x - x_origin) * Math.cos(angle)) - 
+                          ((y_origin - y) * Math.sin(angle)) + x_origin;
+        const y_rotated = ((y_origin - y) * Math.cos(angle)) -
+                          ((x - x_origin) * Math.sin(angle)) + y_origin;
+        return Vector.Vector(x_rotated, y_rotated);
     }
 
     /**
