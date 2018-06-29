@@ -195,15 +195,23 @@ class Vector {
      * @memberof Vector
      */
     static angle(vec) {
-        if (vec[0] === 0) {
-            if (vec[1] === 0) {
-                return 0;
-            }
-
-            return vec[1] > 0 ? Math.PI/2 : 3*Math.PI/2;
+        const x = vec[0];
+        const y = vec[1];
+        if (x === 0) {
+            return y == 0 ?     0          :
+                   y >  0 ?     Math.PI / 2:
+                            3 * Math.PI / 2; 
+        } else if (y === 0) {
+            return x >= 0 ? 0 : Math.PI;
         }
 
-        return Math.atan(vec[1] / vec[0]);
+        let angle = Math.atan(y/x);
+        angle = (x < 0 && y < 0) ? angle + Math.PI   : // Quadrant III
+                (x < 0)          ? angle + Math.PI   : // Quadrant II
+                (y < 0)          ? angle + 2*Math.PI : // Quadrant IV
+                                   angle             ; // Quadrant I
+        
+        return angle;
     }
 
     //---- Basic Math Functions ----

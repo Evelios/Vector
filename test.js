@@ -149,9 +149,36 @@ test("Vector magnitude", function(t) {
 });
 
 test("Vector angle", function(t) {
-    const v = [2, 2];
-    const eq = Math.PI/4;
-    almost(t, Vector.angle(v), eq);
+    const v1 = [ 0,  4];
+    const v2 = [-1,  0];
+    const v3 = [ 0, -2];
+    const v4 = [ 1,  0];
+    const v5 = [ 0,  0]; // Zero
+    const v6 = [ 2,  2]; // Q1
+    const v7 = [-2,  2]; // Q2
+    const v8 = [-2, -2]; // Q3
+    const v9 = [ 2, -2]; // Q4
+
+    const a1 =     Math.PI / 2;
+    const a2 =     Math.PI;
+    const a3 = 3 * Math.PI / 2;
+    const a4 =     0;
+    const a5 =     0;
+    const a6 =     Math.PI / 4;
+    const a7 = 3 * Math.PI / 4;
+    const a8 = 5 * Math.PI / 4;
+    const a9 = 7 * Math.PI / 4;
+
+    almost(t, Vector.angle(v1), a1, "Up");
+    almost(t, Vector.angle(v2), a2, "Left");
+    almost(t, Vector.angle(v3), a3, "Down");
+    almost(t, Vector.angle(v4), a4, "Right");
+    almost(t, Vector.angle(v5), a5, "Zero");
+    almost(t, Vector.angle(v6), a6, "Generic Q1");
+    almost(t, Vector.angle(v7), a7, "Generic Q2");
+    almost(t, Vector.angle(v8), a8, "Generic Q3");
+    almost(t, Vector.angle(v9), a9, "Generic Q4");
+
     t.end();
 });
 
