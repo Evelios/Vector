@@ -1,5 +1,3 @@
-"use strict";
-
 const test = require("tape");
 const almostEqual = require("almost-equal");
 const Vector = require("./Vector");
@@ -150,6 +148,13 @@ test("Vector magnitude", function(t) {
     t.end();
 });
 
+test("Vector angle", function(t) {
+    const v = [2, 2];
+    const eq = Math.PI/4;
+    almost(t, Vector.angle(v), eq);
+    t.end();
+});
+
 test("Vector normal", function(t) {
     const v = [3, 4];
 
@@ -215,7 +220,7 @@ test("Vector Angle Between Vectors", function(t) {
 
     const eq = Math.PI / 4;
 
-    almost(t, Vector.angle(v1, v2), eq);
+    almost(t, Vector.angleBetween(v1, v2), eq);
     t.end();
 });
 

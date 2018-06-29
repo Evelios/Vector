@@ -156,6 +156,48 @@ class Vector {
         return Vector.Vector(vec);
     }
 
+    //---- Vector Properties ----
+
+    /**
+     * Get the magnitude of the vector
+     *
+     * @param {Vector} vec The vector to determine the magnitude from
+     * @returns {number} The magniture of the vector
+     * @memberof Vector
+     */
+    static magnitude(vec) {
+        return Math.sqrt(Vector.magSquared(vec));
+    }
+
+    /**
+     * Get the magnitude of the vector squared. Use this value if you only need
+     * a number to compare the vectors to and don't need the actual value. This
+     * will save from using the expensive computation of the square route
+     * function.
+     * 
+     * @static
+     * @param {Vector} vec The vector to determine the squared magnitude from
+     * @returns {number} The magnitude of the vector squared 
+     * 
+     * @memberof Vector
+     */
+    static magSquared(vec) {
+        return Math.pow(vec[0], 2) + Math.pow(vec[1], 2);
+    }
+
+    /**
+     * Get the angle of the input vector
+     * 
+     * @static
+     * @param {Vector} vec The input vector
+     * @returns {number} The angle of the vector in radians
+     * 
+     * @memberof Vector
+     */
+    static angle(vec) {
+        return Math.atan(vec[1] / vec[0]);
+    }
+
     //---- Basic Math Functions ----
 
     /**
@@ -210,35 +252,7 @@ class Vector {
     }
 
     //---- Advanced Vector Functions ----
-
-    /**
-     * Get the magnitude of the vector
-     *
-     * @param {Vector} vec The vector to determine the magnitude from
-     * @returns {number} The magniture of the vector
-     * @memberof Vector
-     */
-    static magnitude(vec) {
-        return Math.sqrt(Vector.magSquared(vec));
-    }
-
-    /**
-     * Get the magnitude of the vector squared. Use this value if you only need
-     * a number to compare the vectors to and don't need the actual value. This
-     * will save from using the expensive computation of the square route
-     * function.
-     * 
-     * @static
-     * @param {Vector} vec The vector to determine the squared magnitude from
-     * @returns {number} The magnitude of the vector squared 
-     * 
-     * @memberof Vector
-     */
-    static magSquared(vec) {
-        return Math.pow(vec[0], 2) + Math.pow(vec[1], 2);
-    }
-
-    // Get the unit vector
+    
     /**
      * Get the normal vector of the current vector.
      *
@@ -254,6 +268,7 @@ class Vector {
      * Get the get the current vector rotated by a certain ammount around
      * a particular point
      *
+     * @static
      * @param {Vector} vec The vector to rotate
      * @param {Vector} around The vector to rotate around
      * @param {number} radians The ammount to rotate
@@ -262,7 +277,7 @@ class Vector {
      *  vector by a particular ammount
      * @memberof Vector
      */
-    rotate(vec, around, radians) {
+    static rotate(vec, around, radians) {
         return 0;
     }
 
@@ -344,7 +359,7 @@ class Vector {
      * @returns The angle between vector a and vector b
      * @memberof Vector
      */
-    static angle(a, b) {
+    static angleBetween(a, b) {
         return Math.acos(Vector.dot(a, b) / (Vector.magnitude(a) * Vector.magnitude(b)));
     }
 
