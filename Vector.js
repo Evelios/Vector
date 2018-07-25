@@ -476,7 +476,7 @@ module.exports = (function() {
      *  -PI/2 rad.
      * @memberof Vector
      */
-    perpendiculars = function(vec) {
+    const perpendiculars = function(vec) {
         const plus90 = Vector(-vec[1], vec[0]).normalize();
         const minus90 = Vector(vec[1], -vec[0]).normalize();
         return [plus90, minus90];
