@@ -30,12 +30,10 @@ module.exports = (function() {
      * // Object
      * var vec = Vector({x, y});
      * 
-     * @static
      * @param {object|Array} vec The input vector 
      * 
      * @returns {Array} The vector array in the form [x, y]
      * @throws {TypeError} If the array is NaN or infinity
-     * @memberof Vector
      */
     const Vector = function(x, y) {
         if (Array.isArray(x)) {
@@ -59,14 +57,12 @@ module.exports = (function() {
     /**
      * Create a vector from polar coordinates
      *
-     * @static
      * @param {number} radius The radius of the vector
      * @param {number} theta The angle of the vector in radians.
      *  Should be between 0 and 2*PI
      * 
      * @returns The rectangular vector produced from the polar coordinates
      *
-     * @memberof Vector
      */
     const Polar = function(radius, theta) {
         return Vector(radius * Math.cos(theta), radius * Math.sin(theta));
@@ -79,14 +75,11 @@ module.exports = (function() {
      * It also checks for floating point precision and rounds based on the
      * vector floating point precision.
      * 
-     * @static
      * @private
-     * 
      * @param {number} num The number to be cleaned
      * @returns {number} The cleaned output number
      *  
      * @throws {RangeError} Throws range error if the value is NaN or -Inf or +Inf 
-     * @memberof Vector
      */
     const _clean = function(num) {
         if (isNaN(num)) {
@@ -108,13 +101,11 @@ module.exports = (function() {
      * Determine if two numbers are almost equal to eachother. This is based on
      * the Precision value
      * 
-     * @static
      * @private
      * @param {number} a The first value 
      * @param {number} b The second value
      * @returns {boolean} True if the values are almost equal to eachother
      * 
-     * @memberof Vector
      */
     const _almostEqual = function(a, b) {
         return _clean(a) - _clean(b) < Precision;
@@ -123,12 +114,10 @@ module.exports = (function() {
     /**
      * Determine if two vectors are equal to eachother
      * 
-     * @static
      * @param {Vector} a The first vector 
      * @param {Vector} b The second vector
      * @returns {boolean} True if the two vectors are equal to eachother
      * 
-     * @memberof Vector
      */
     const equals = function(a, b) {
         return _almostEqual(a[0], a[1]) &&
@@ -141,7 +130,6 @@ module.exports = (function() {
      * @param {number[]} vec The input vector
      * 
      * @returns {string} The string representation of a vector in (x, y) form
-     * @memberof Vector
      */
     const toString = function(vec) {
         return `(${vec[0]}, ${vec[1]})`;
@@ -150,10 +138,8 @@ module.exports = (function() {
     /**
      * Get a copy of the input vector
      *
-     * @static
      * @param {Vector} vec the vector to be coppied
      * @returns {Vector} The vector copy
-     * @memberof Vector
      */
     const copy = function(vec) {
         return Vector(vec);
@@ -166,7 +152,6 @@ module.exports = (function() {
      *
      * @param {Vector} vec The vector to determine the magnitude from
      * @returns {number} The magniture of the vector
-     * @memberof Vector
      */
     const magnitude = function(vec) {
         return Math.sqrt(magSquared(vec));
@@ -178,11 +163,9 @@ module.exports = (function() {
      * will save from using the expensive computation of the square route
      * function.
      * 
-     * @static
      * @param {Vector} vec The vector to determine the squared magnitude from
      * @returns {number} The magnitude of the vector squared 
      * 
-     * @memberof Vector
      */
     const magSquared = function(vec) {
         return Math.pow(vec[0], 2) + Math.pow(vec[1], 2);
@@ -191,11 +174,9 @@ module.exports = (function() {
     /**
      * Get the angle of the input vector
      * 
-     * @static
      * @param {Vector} vec The input vector
      * @returns {number} The angle of the vector in radians
      * 
-     * @memberof Vector
      */
     const angle = function(vec) {
         const x = vec[0];
@@ -222,11 +203,9 @@ module.exports = (function() {
     /**
      * Add two vectors element wise
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns {Vector} The vector result of adding the two vectors
-     * @memberof Vector
      */
     const add = function(a, b) {
         return Vector(a[0] + b[0], a[1] + b[1]);
@@ -235,11 +214,9 @@ module.exports = (function() {
     /**
      * Subtract two vectors element wise
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second Vector
      * @returns {Vector} The vector result of subtracting the two vectors
-     * @memberof Vector
      */
     const subtract = function(a, b) {
         return Vector(a[0] - b[0], a[1] - b[1]);
@@ -252,7 +229,6 @@ module.exports = (function() {
      * @param {number} scalar The number to multiply the vector by
      * @returns {Vector} The result of multiplying the vector by a scalar
      *  element wise
-     * @memberof Vector
      */
     const multiply = function(vec, scalar) {
         return Vector(vec[0] * scalar, vec[1] * scalar);
@@ -264,7 +240,6 @@ module.exports = (function() {
      * @param {Vector} vec The input vector
      * @param {number} scalar THe number to multiply the vector by
      * @returns {Vector} The result of multiplying the vector by a scalar
-     * @memberof Vector
      */
     const divide = function(vec, scalar) {
         return Vector(vec[0] / scalar, vec[1] / scalar);
@@ -277,7 +252,6 @@ module.exports = (function() {
      *
      * @param {Vector} vec The vector to normalize
      * @returns {Vector} A vector that is the normal compenent of the vector
-     * @memberof Vector
      */
     const normalize = function(vec) {
         return divide(vec, magnitude(vec));
@@ -287,7 +261,6 @@ module.exports = (function() {
      * Get the get the current vector rotated by a certain ammount clockwise
      * around a particular point
      *
-     * @static
      * @param {Vector} vec The vector to rotate
      * @param {Vector} around The vector to rotate around
      * @param {number} angle The ammount to rotate a positive angle rotates
@@ -295,7 +268,6 @@ module.exports = (function() {
      * 
      * @returns {Vector} The vector that results from rotating the current
      *  vector by a particular ammount
-     * @memberof Vector
      */
     const rotate = function(vec, around, angle) {
         const x = vec[0];
@@ -310,14 +282,23 @@ module.exports = (function() {
         return Vector(x_rotated, y_rotated);
     };
 
+    
+    /**
+     * Get the negation of the x and y coordinates of a vector
+     * 
+     * @param {Vector} vec The input vector
+     * @returns {Vector} The inverse of the input vector
+     */
+    const inverse = function(vec) {
+        return Vector([-vec[0], -vec[1]]);
+    };
+
     /**
      * Get the dot product of two vectors
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns {number} The dot product of the two vectors
-     * @memberof Vector
      */
     const dot = function(a, b) {
         return a[0] * b[0] + a[1] * b[1];
@@ -327,7 +308,6 @@ module.exports = (function() {
      * Get the average location between several vectors
      *
      * @param {Vector[]} vectors The list of vectors to average
-     * @memberof Vector
      */
     const avg = function(vectors) {
         let average = zero();
@@ -341,11 +321,9 @@ module.exports = (function() {
     /**
      * Get the cross product of two vectors
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns {number} The cross product of the two vectors
-     * @memberof Vector
      */
     const cross = function(a, b) {
         return a[0] * b[1] - a[1] * b[0];
@@ -354,11 +332,9 @@ module.exports = (function() {
     /**
      * Get the midpoint between two vectors
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns The midpoint of two vectors
-     * @memberof Vector
      */
     const midpoint = function(a, b) {
         return divide(add(a, b), 2);
@@ -367,11 +343,9 @@ module.exports = (function() {
     /**
      * Get the projection of vector a onto vector b
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns The projection vector of a onto b
-     * @memberof Vector
      *
      * @todo Add assertion for non-zero length b vector
      */
@@ -382,11 +356,9 @@ module.exports = (function() {
     /**
      * Get the angle between two vectors
      *
-     * @static
      * @param {Vector} a The frist vector
      * @param {Vector} b The second vector
      * @returns The angle between vector a and vector b
-     * @memberof Vector
      */
     const angleBetween = function(a, b) {
         return Math.acos(dot(a, b) / (magnitude(a) * magnitude(b)));
@@ -395,12 +367,10 @@ module.exports = (function() {
     /**
      * Get the euclidean distance between two vectors
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns The euclidean distance between a and b
      * @see {@link distSquared}
-     * @memberof Vector
      */
     const distance = function(a, b) {
         return Math.sqrt(distSquared(a, b));
@@ -411,12 +381,10 @@ module.exports = (function() {
      * This is used as a helper for the distnace function but can be used
      * to save on speed by not doing the square root operation.
      *
-     * @static
      * @param {Vector} a The first vector
      * @param {Vector} b The second vector
      * @returns The euclidean distance squared between vector a and vector b
      * @see {@link distnace}
-     * @memberof Vector
      */
     const distSquared = function(a, b) {
         const dx = a[0] - b[0];
@@ -428,14 +396,12 @@ module.exports = (function() {
      * Get the shortest distance between the point p and the line
      * segment v to w.
      *
-     * @static
      * @param {Vector} p The vector point
      * @param {Vector} v The first line segment endpoint
      * @param {Vector} w The second line segment endpoint
      * @returns The shortest euclidean distance between point
      * @see {@link distToSeg2}
      * @see {@link http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment}
-     * @memberof Vector
      */
     const distToSeg = function(p, v, w) {
         return Math.sqrt(distToSegSquared(p, v, w));
@@ -445,14 +411,12 @@ module.exports = (function() {
      * Get the shortest distance squared between the point p and the line
      * segment v to w.
      *
-     * @static
      * @param {Vector} p The vector point
      * @param {Vector} v The first line segment endpoint
      * @param {Vector} w The second line segment endpoint
      * @returns The shortest euclidean distance squared between point
      * @see {@link distToSeg}
      * @see {@link http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment}
-     * @memberof Vector
      */
     const distToSegSquared = function(p, v, w) {
         const l = distSquared(v, w);
@@ -474,7 +438,6 @@ module.exports = (function() {
      *  to the vector. The first vector is the normal vector that is +90 deg or
      *  +PI/2 rad. The second vector is the noraml vector that is -90 deg or
      *  -PI/2 rad.
-     * @memberof Vector
      */
     const perpendiculars = function(vec) {
         const plus90 = Vector(-vec[1], vec[0]).normalize();
@@ -487,10 +450,7 @@ module.exports = (function() {
     /**
      * Get a vector of no magnitude and no direction
      *
-     * @static
-     * @function
      * @returns {Vector} Vector of magnitude zero
-     * @memberof Vector
      */
     const zero = function() {
         "use strict";
@@ -500,10 +460,7 @@ module.exports = (function() {
     /**
      * Get the unit vector pointing in the positive y direction
      *
-     * @static
-     * @function
      * @returns {Vector} Unit vector pointing up
-     * @memberof Vector
      */
     const up = function() {
         "use strict";
@@ -513,10 +470,7 @@ module.exports = (function() {
     /**
      * Get the unit vector pointing in the negative y direction
      *
-     * @static
-     * @function
      * @returns {Vector} Unit vector pointing down
-     * @memberof Vector
      */
     const down = function() {
         "use strict";
@@ -526,10 +480,7 @@ module.exports = (function() {
     /**
      * Get the unit vector pointing in the negative x direction
      *
-     * @static
-     * @function
      * @returns {Vector} Unit vector pointing right
-     * @memberof Vector
      */
     const left = function() {
         "use strict";
@@ -539,10 +490,7 @@ module.exports = (function() {
     /**
      * Get the unit vector pointing in the positive x direction
      *
-     * @static
-     * @function
      * @returns {Vector} Unit vector pointing right
-     * @memberof Vector
      */
     const right = function() {
         "use strict";
@@ -564,6 +512,7 @@ module.exports = (function() {
         divide: divide,
         normalize: normalize,
         rotate: rotate,
+        inverse: inverse,
         dot: dot,
         avg: avg,
         cross: cross,
@@ -574,6 +523,7 @@ module.exports = (function() {
         distSquared: distSquared,
         distToSeg: distToSeg,
         distToSegSquared: distToSegSquared,
+        perpendiculars: perpendiculars,
         zero: zero,
         up: up,
         down: down,
