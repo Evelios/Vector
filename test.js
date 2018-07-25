@@ -216,6 +216,18 @@ test("Vector rotation - Point", function(t) {
     t.end();
 });
 
+test("Vector inverse", function(t) {
+    const v1 = [-1,  4];
+    const v2 = [ 5, -3];
+
+    const a1 = [ 1, -4];
+    const a2 = [-5,  3];
+
+    t.deepEquals(Vector.inverse(v1), a1);
+    t.deepEquals(Vector.inverse(v2), a2);
+    t.end();
+})
+
 test("Vector Dot Product", function(t) {
     const v1 = [5, 6];
     const v2 = [3, 4];
