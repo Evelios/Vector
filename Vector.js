@@ -198,6 +198,15 @@ module.exports = (function() {
         return angle;
     };
 
+    /**
+     * Limit the max magnitude of a vector. If the magnitude is greater than
+     * the input, limit it to the input ammount. Otherwise leave the vector
+     * alone.
+     */
+    const clamp = function(vec, limit) {
+        return magnitude(vec) > limit ? Polar(limit, angle(vec)) : vec;
+    };
+
     //---- Basic Math Functions ----
 
     /**
@@ -506,6 +515,7 @@ module.exports = (function() {
         magnitude: magnitude,
         magSquared: magSquared,
         angle: angle,
+        clamp: clamp,
         add: add,
         subtract: subtract,
         multiply: multiply,

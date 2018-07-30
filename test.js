@@ -182,6 +182,24 @@ test("Vector angle", function(t) {
     t.end();
 });
 
+test("Vector clamp : unchanged", function(t) {
+    const v = [3, 3];
+    const limit = 5;
+
+    t.deepEquals(Vector.clamp(v, limit), v);
+    t.end();
+});
+
+test("Vector clamp : unchanged", function(t) {
+    const v = [3, 3];
+    const limit = Math.sqrt(2);
+
+    const a = [1, 1];
+
+    t.deepEquals(Vector.clamp(v, limit), a);
+    t.end();
+});
+
 test("Vector normal", function(t) {
     const v = [3, 4];
 
