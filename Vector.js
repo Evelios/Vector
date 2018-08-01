@@ -263,7 +263,8 @@ module.exports = (function() {
      * @returns {Vector} A vector that is the normal compenent of the vector
      */
     const normalize = function(vec) {
-        return divide(vec, magnitude(vec));
+        const mag = magnitude(vec);
+        return mag > 0 ? divide(vec, magnitude(vec)) : zero();
     };
 
     /**
