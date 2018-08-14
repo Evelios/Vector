@@ -47,10 +47,23 @@ test("Vector equality", function(t) {
     t.end();
 });
 
+test("Vector inequality", function(t) {
+    t.notok(Vector.equals([2, 1], [1, 2]));
+    t.end();
+});
+
 test("Vector equality floating point", function(t) {
     t.ok(Vector.equals(
-        Vector.Vector([1.0000000001, 2.2222222222]),
-                      [1.0000000001, 2.2222222222]
+         Vector.Vector([1.0000000001, 2.2222222222]),
+                       [1.0000000001, 2.2222222222]
+    ));
+    t.end();
+});
+
+test("Vector inequality floating point", function(t) {
+    t.notok(Vector.equals(
+            Vector.Vector([1.0000000001, 2.2222222222]),
+                          [1.001, 2.224]
     ));
     t.end();
 });

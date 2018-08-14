@@ -15,7 +15,7 @@ module.exports = (function() {
     //---- Default Constructor ----
 
     const _p = 8;
-    const Precision = Math.pow(10, _p);
+    const Precision = 1 / Math.pow(10, _p);
 
     /**
      * Create a vector object from a List or Object type vector notation.
@@ -94,7 +94,7 @@ module.exports = (function() {
             return num;
         }
 
-        return Math.round(num * Precision) / Precision;
+        return Math.round(num / Precision) * Precision;
     };
 
     /**
@@ -108,7 +108,7 @@ module.exports = (function() {
      * 
      */
     const _almostEqual = function(a, b) {
-        return _clean(a) - _clean(b) < Precision;
+        return Math.abs(_clean(a) - _clean(b)) < Precision;
     };
 
     /**
@@ -120,8 +120,8 @@ module.exports = (function() {
      * 
      */
     const equals = function(a, b) {
-        return _almostEqual(a[0], a[1]) &&
-               _almostEqual(b[0], b[1]);
+        return _almostEqual(a[0], b[0]) &&
+               _almostEqual(a[1], b[1]);
     };
 
     /**
