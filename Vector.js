@@ -292,6 +292,9 @@ module.exports = (function() {
         return Vector(x_rotated, y_rotated);
     };
 
+    const offset = function(vec, mag, angle) {
+        return add(vec, Polar(mag, angle));
+    };
     
     /**
      * Get the negation of the x and y coordinates of a vector
@@ -523,6 +526,7 @@ module.exports = (function() {
         divide: divide,
         normalize: normalize,
         rotate: rotate,
+        offset:offset,
         inverse: inverse,
         dot: dot,
         avg: avg,

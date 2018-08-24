@@ -247,6 +247,17 @@ test("Vector rotation - Point", function(t) {
     t.end();
 });
 
+test("Vector offset", function(t) {
+    const v = [1, 4];
+    const mag = Math.sqrt(2);
+    const angle = Math.PI / 4;
+
+    const a = [2, 5];
+
+    t.deepEquals(Vector.offset(v, mag, angle), a);
+    t.end();
+});
+
 test("Vector inverse", function(t) {
     const v1 = [-1,  4];
     const v2 = [ 5, -3];
