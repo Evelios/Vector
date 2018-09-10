@@ -280,16 +280,16 @@ module.exports = (function() {
      *  vector by a particular ammount
      */
     const rotate = function(vec, around, angle) {
-        const x = vec[0];
-        const y = vec[1];
-        const x_origin = around[0];
-        const y_origin = around[1];
+        const norm_x = vec[0] - around[0];
+        const norm_y = vec[1] - around[1];
 
-        const x_rotated = ((x - x_origin) * Math.cos(angle)) - 
-                          ((y_origin - y) * Math.sin(angle)) + x_origin;
-        const y_rotated = ((y_origin - y) * Math.cos(angle)) -
-                          ((x - x_origin) * Math.sin(angle)) + y_origin;
-        return Vector(x_rotated, y_rotated);
+        const x_rotated = norm_x * Math.cos(angle) - norm_y * Math.sin(angle);
+        const y_rotated = norm_x * Math.sin(angle) + norm_y * Math.cos(angle);
+
+        const x_denormalized = x_rotated + around[0];
+        const y_denormalized = y_rotated + around[1];
+
+        return Vector(x_denormalized, y_denormalized);
     };
 
     const offset = function(vec, mag, angle) {

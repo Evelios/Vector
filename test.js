@@ -223,24 +223,41 @@ test("Vector normal", function(t) {
 test("Vector rotation - Origin", function(t) {
     const v1 = [3, 4];
     const v2 = [1, 1];
+
     const amm = Math.PI / 2;
 
-    const a1 = [4, -3];
-    const a2 = [1, -1];
+    const a1 = [-4, 3];
+    const a2 = [-1, 1];
 
     t.deepEquals(Vector.rotate(v1, [0, 0], amm), a1);
     t.deepEquals(Vector.rotate(v2, [0, 0], amm), a2);
     t.end();
 });
 
+test("Vector no rotation", function (t) {
+    const v1 = [3, 4];
+    const v2 = [1, 1];
+
+    const about = [-1, -1];
+    const amm = 0;
+
+    const a1 = v1;
+    const a2 = v2;
+
+    t.deepEquals(Vector.rotate(v1, about, amm), a1);
+    t.deepEquals(Vector.rotate(v2, about, amm), a2);
+    t.end();
+});
+
 test("Vector rotation - Point", function(t) {
     const v1 = [3, 4];
     const v2 = [1, 1];
+
     const about = [-1, -1];
     const amm = Math.PI / 2;
 
-    const a1 = [4, -5];
-    const a2 = [1, -3];
+    const a1 = [-6, 3];
+    const a2 = [-3, 1];
 
     t.deepEquals(Vector.rotate(v1, about, amm), a1);
     t.deepEquals(Vector.rotate(v2, about, amm), a2);
